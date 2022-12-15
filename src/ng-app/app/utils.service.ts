@@ -42,7 +42,7 @@ export class UtilsService {
 
   private languagesMenuArray = [
     { id: 'en', label: 'English', img: 'english.svg' },
-    //{ id: 'de', label: 'Deutsch', img: 'german.svg' },
+    { id: 'de', label: 'Deutsch', img: 'german.svg' },
     { id: 'fr', label: 'Français', img: 'german.svg' }
   ];
   private languageMap;
