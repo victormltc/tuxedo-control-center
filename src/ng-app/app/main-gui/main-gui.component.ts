@@ -138,9 +138,9 @@ export class MainGuiComponent implements OnInit, OnDestroy {
 
     public updateLanguageName(): void {
         let curLangIndex: number = this.utils.getLanguagesMenuArray().findIndex(lang => lang.id === this.utils.getCurrentLanguageId())
-        let newLangIndex: number = (curLangIndex + 1) % this.utils.getLanguagesMenuArray().length
-        let newLangLabel: string = this.utils.getLanguagesMenuArray()[newLangIndex].label
-        this.buttonLanguageLabel = newLangLabel;
+        let nextLangIndex: number = (curLangIndex + 1) % this.utils.getLanguagesMenuArray().length
+        let nextLangLabel: string = this.utils.getLanguagesMenuArray()[nextLangIndex].label
+        this.buttonLanguageLabel = nextLangLabel;
     }
 
     public getStateInputs(): IStateInfo[] {
