@@ -74,9 +74,9 @@ import { GaugeModule } from 'angular-gauge';
 import { GlobalSettingsComponent } from './global-settings/global-settings.component';
 import { ShutdownTimerComponent } from './shutdown-timer/shutdown-timer.component';
 import { ToolsComponent } from "./tools/tool.component";
+import { KeyboardBacklightComponent } from './keyboard-backlight/keyboard-backlight.component';
 import { ChangeCryptPasswordComponent } from './change-crypt-password/change-crypt-password.component';
 import { FanGraphComponent } from './fan-graph/fan-graph.component';
-
 import { ChartsModule, ThemeService } from 'ng2-charts';
 import { ColorPickerModule } from 'ngx-color-picker';
 import { MainGuiComponent } from './main-gui/main-gui.component';
@@ -105,7 +105,8 @@ declare const require;
     MainGuiComponent,
     AquarisControlComponent,
     DialogInputTextComponent,
-    DialogConfirmComponent
+    DialogConfirmComponent,
+    KeyboardBacklightComponent
   ],
   imports: [
     BrowserModule,

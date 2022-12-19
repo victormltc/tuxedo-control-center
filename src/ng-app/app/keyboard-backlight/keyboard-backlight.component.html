@@ -1,0 +1,56 @@
+<!--
+Copyright (c) 2019-2020 TUXEDO Computers GmbH <tux@tuxedocomputers.com>
+
+This file is part of TUXEDO Control Center.
+
+TUXEDO Control Center is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+TUXEDO Control Center is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with TUXEDO Control Center.  If not, see <https://www.gnu.org/licenses/>.
+-->
+
+<div class=content>
+    <p>On va modifier des couleurs c'est parti.</p>
+    
+    <p>Selected Color : </p>
+    <p>{{ selectedColor.label }}, hex = {{ selectedColor.hex }}</p>
+
+    
+    <!--
+    <mat-form-field appearance="fill" style="margin-right: 10px;">
+        <mat-label i18n="@@cShutdownTimerHour">Hour</mat-label>
+        <mat-select [(value)]="selectedHour">
+            <mat-option *ngFor="let hour of hours" [value]="hour">TODO {{ hour.toString().length < 2 ? 0 + hour.toString() :
+                    hour.toString() }}</mat-option>
+        </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+        <mat-label i18n="@@cShutdownTimerMinute">Minute</mat-label>
+        <mat-select [(value)]="selectedMinute">
+            <mat-option *ngFor="let minute of minutes" [value]="minute">TODO {{ minute.toString().length < 2 ? 0 +
+                    minute.toString() : minute.toString() }}</mat-option>
+        </mat-select>
+    </mat-form-field>
+    -->
+    
+    <mat-button-toggle-group [(ngModel)]="inputColor" >
+        <mat-button-toggle 
+            *ngFor="let color of availableColors"
+            value="{{color.hex}}"
+            checked="{{color.hex === selectedColor.hex ? true : false}}"
+            background-color="#{{color.hex}}" 
+            (click)="updateSelectedColor()">{{color.label}}</mat-button-toggle>
+    </mat-button-toggle-group>
+
+    <p>rawInput : {{inputColor}}, Couleur {{selectedColor.toString()}} </p>
+
+</div>
