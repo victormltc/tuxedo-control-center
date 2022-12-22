@@ -17,14 +17,8 @@ You should have received a copy of the GNU General Public License
 along with TUXEDO Control Center.  If not, see <https://www.gnu.org/licenses/>.
 -->
 
-<div class=content>
-    <p>On va modifier des couleurs c'est parti.</p>
-    
-    <p>Selected Color : </p>
-    <p>{{ selectedColor.label }}, hex = {{ selectedColor.hex }}</p>
 
-    
-    <!--
+<!--
     <mat-form-field appearance="fill" style="margin-right: 10px;">
         <mat-label i18n="@@cShutdownTimerHour">Hour</mat-label>
         <mat-select [(value)]="selectedHour">
@@ -41,16 +35,85 @@ along with TUXEDO Control Center.  If not, see <https://www.gnu.org/licenses/>.
         </mat-select>
     </mat-form-field>
     -->
+
+<div class=content>
+    <p>On va modifier des couleurs c'est parti.</p>
+
+    <table class="fixed">
+        <col width=50%/>
+        <col width=50%/>
+        <th>Profiles</th>
+        <th>Colors</th>
+        <tr>
+            <td>
+                <p>profile : {{selectedProfile.toString()}}</p>
+                <button mat-raised-button (click)="genProfile()">generate profile</button>
+                <br/>
+                <br/>
+                <mat-form-field appearance="fill">
+                    <mat-label>Profile selection</mat-label>
+                    <mat-select [(ngModel)]="inputProfile">
+                        <mat-option
+                        *ngFor="let prof of profiles"
+                        [value]="prof.id"
+                        (click)="updateSelectedProfile()">
+                            <table class="fixed">
+                                <col width="40px"/>
+                                <col width="10px"/>
+                                <col/>
+                                <tr>
+                                    <td [ngStyle]="{'background-color': '#'+prof.uniqueColor}" ></td>
+                                    <td></td>
+                                    <td>{{prof.id}} - {{prof.name}}</td>
+                                </tr>
+                            </table>
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </td>
+
+            <td>
+                <p>color : {{selectedColor.toString()}} </p>
+
+                <mat-form-field appearance="fill">
+                    <mat-label>Backlight color</mat-label>
+                    <mat-select [(ngModel)]="inputColor">
+                        <mat-option
+                        *ngFor="let color of availableColors"
+                        [value]="color.hex"
+                        (click)="updateSelectedColor()">
+                            <table class="fixed">
+                                <col width="60px"/>
+                                <col width="15px"/>
+                                <col/>
+                                <tr>
+                                    <td [ngStyle]="{'background-color': '#'+color.hex}" ></td>
+                                    <td></td>
+                                    <td>{{color.label}}</td>
+                                </tr>
+                            </table>
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </td>
+        </tr>
+    </table>
+
+
+
     
-    <mat-button-toggle-group [(ngModel)]="inputColor" >
+
+    <!--USE FOR LIGHT MODE-->
+    <!--mat-button-toggle-group [(ngModel)]="inputColor" >
         <mat-button-toggle 
             *ngFor="let color of availableColors"
             value="{{color.hex}}"
+            (click)="updateSelectedColor()"
+            
             checked="{{color.hex === selectedColor.hex ? true : false}}"
-            background-color="#{{color.hex}}" 
-            (click)="updateSelectedColor()">{{color.label}}</mat-button-toggle>
-    </mat-button-toggle-group>
-
-    <p>rawInput : {{inputColor}}, Couleur {{selectedColor.toString()}} </p>
+            [style.background-color]="color.hex" >
+                {{color.label}}
+        </mat-button-toggle>
+    </mat-button-toggle-group-->
 
 </div>
