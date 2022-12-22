@@ -83,6 +83,7 @@ import { MainGuiComponent } from './main-gui/main-gui.component';
 import { AquarisControlComponent } from './aquaris-control/aquaris-control.component';
 import { DialogInputTextComponent } from './dialog-input-text/dialog-input-text.component';
 import { DialogConfirmComponent } from './dialog-confirm/dialog-confirm.component';
+import { ChargingSettingsComponent } from './charging-settings/charging-settings.component';
 
 registerLocaleData(localeDe, 'de', localeDeExtra);
 
@@ -106,7 +107,8 @@ declare const require;
     AquarisControlComponent,
     DialogInputTextComponent,
     DialogConfirmComponent,
-    KeyboardBacklightComponent
+    KeyboardBacklightComponent,
+    ChargingSettingsComponent,
   ],
   imports: [
     BrowserModule,
