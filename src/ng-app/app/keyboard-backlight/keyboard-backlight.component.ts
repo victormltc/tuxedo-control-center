@@ -50,11 +50,13 @@ export class KeyboardBacklightComponent implements OnInit {
     public profiles: Array<TccProfileKeyboardBacklight>;
 
     
+    ///  BACK-END (tuxedo-keyboard driver & conf files settings)   ////////////////////////////////////////////
+    // python source : https://github.com/webketje/tuxedo-backlight-control
+    //  + fork (brightness control) : https://github.com/encarsia/tuxedo-backlight-control
+    // let the user pick a file by hand : https://developer.mozilla.org/en-US/docs/Web/API/FileSystemFileHandle
+    
+    /* TODO
 
-    
-    
-    //TODO
-    /*
     ----
     // écriture des paramètres
     ----
@@ -298,11 +300,7 @@ export class KeyboardBacklightComponent implements OnInit {
     
 
 
-    ///////////////////   BACK-END : tuxedo-keyboard driver & conf files settings   //////////////////////////////////////////////////////////
-
-    // python source : https://github.com/webketje/tuxedo-backlight-control
-    //  + fork (brightness control) : https://github.com/encarsia/tuxedo-backlight-control
-    // let the user pick a file by hand : https://developer.mozilla.org/en-US/docs/Web/API/FileSystemFileHandle
+    
 
 
     
