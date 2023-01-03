@@ -46,6 +46,12 @@ along with TUXEDO Control Center.  If not, see <https://www.gnu.org/licenses/>.
         <th>Colors</th>
         <tr>
             <td>
+                en travaux  
+                <button mat-raised-button (click)="buttonSetupPerm()">perm</button>
+                <br><br>
+                <button mat-raised-button (click)="buttonWriteFileAsync()">async</button>
+                <button mat-raised-button (click)="buttonWriteFileSync()">sync</button>
+                <!--
                 <p>profile : {{selectedProfile.toString()}}</p>
                 <button mat-raised-button (click)="genProfile()">generate profile</button>
                 <br/>
@@ -70,6 +76,7 @@ along with TUXEDO Control Center.  If not, see <https://www.gnu.org/licenses/>.
                         </mat-option>
                     </mat-select>
                 </mat-form-field>
+                -->
             </td>
 
             <td>

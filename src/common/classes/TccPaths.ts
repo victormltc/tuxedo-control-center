@@ -23,5 +23,8 @@ export class TccPaths {
     static readonly PROFILES_FILE: string = '/etc/tcc/profiles';
     static readonly AUTOSAVE_FILE: string = '/etc/tcc/autosave';
     static readonly FANTABLES_FILE: string = '/etc/tcc/fantables';
+    static readonly KB_PROFILES_FILE: string = '/etc/tcc/keyboardprofiles';
+    static readonly KB_COLORS_FILE: string = '/etc/tcc/keyboardcolors';
     static readonly TCCD_LOG_FILE: string = '/var/log/tccd/log';
+    static readonly KB_DRIVER_DIR: string = '/sys/devices/platform/tuxedo_keyboard/';
 }

@@ -21,6 +21,7 @@ import { TccDBusController } from '../../common/classes/TccDBusController';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { FanData } from '../../service-app/classes/TccDBusInterface';
 import { ITccProfile, TccProfile } from '../../common/models/TccProfile';
+import { ITccProfileKeyboardBacklight, TccProfileKeyboardBacklight } from '../../common/models/TccProfileKeyboardBacklight';
 import { UtilsService } from './utils.service';
 import { TDPInfo } from '../../native-lib/TuxedoIOAPI';
 import { ConfigService } from './config.service';
@@ -53,6 +54,7 @@ export class TccDBusClientService implements OnDestroy {
   public odmProfilesAvailable = new BehaviorSubject<string[]>([]);
   public odmPowerLimits = new BehaviorSubject<TDPInfo[]>([]);
 
+
   public customProfiles = new BehaviorSubject<ITccProfile[]>([]);
   public defaultProfiles = new BehaviorSubject<ITccProfile[]>([]);
   public defaultValuesProfile = new BehaviorSubject<ITccProfile>(undefined);
@@ -62,6 +64,17 @@ export class TccDBusClientService implements OnDestroy {
 
   public activeProfile = new BehaviorSubject<TccProfile>(undefined);
   private previousActiveProfileJSON = '';
+
+  public customProfilesKeyboardBacklight = new BehaviorSubject<ITccProfileKeyboardBacklight[]>([]);
+  public defaultProfilesKeyboardBacklight = new BehaviorSubject<ITccProfileKeyboardBacklight[]>([]);
+  public defaultValuesProfileKeyboardBacklight = new BehaviorSubject<ITccProfileKeyboardBacklight>(undefined);
+  private previousCustomProfilesKeyboardBacklightJSON = '';
+  private previousDefaultProfilesKeyboardBacklightJSON = '';
+  private previousDefaultValuesProfileKeyboardBacklightJSON = '';
+
+  public activeProfileKeyboardBacklight = new BehaviorSubject<TccProfileKeyboardBacklight>(undefined);
+  private previousActiveProfileKeyboardBacklightJSON = '';
+
 
   public fansMinSpeed = new BehaviorSubject<number>(undefined);
   public fansOffAvailable = new BehaviorSubject<boolean>(undefined);
@@ -139,6 +152,45 @@ export class TccDBusClientService implements OnDestroy {
             }
         } catch (err) {
             console.log('tcc-dbus-client.service: unexpected error parsing profile lists => ' + err);
+        }
+    }
+
+    // tuxedo-keyboard settings
+    // Retrieve and parse backlight profiles
+    const activeProfileKeyboardBacklightJSON: string = await this.tccDBusInterface.getActiveProfileKeyboardBacklightJSON();
+    if (activeProfileKeyboardBacklightJSON !== undefined) {
+        if (activeProfileKeyboardBacklightJSON === undefined) { console.log('tcc-dbus-client.service: unexpected error => no active ProfileKeyboardBacklight'); }
+        try {
+            const activeProfileKeyboardBacklight: TccProfileKeyboardBacklight = JSON.parse(activeProfileKeyboardBacklightJSON);
+            // this.utils.fillDefaultValuesProfileKeyboardBacklight(activeProfileKeyboardBacklight);
+            if (this.previousActiveProfileKeyboardBacklightJSON !== activeProfileKeyboardBacklightJSON) {
+                // not relevant for backlight profiles, as they are much more straightforward than TccProfiles
+                //this.utils.fillDefaultProfileKeyboardBacklightTexts(activeProfileKeyboardBacklight);
+                this.activeProfileKeyboardBacklight.next(activeProfileKeyboardBacklight);
+                this.previousActiveProfileKeyboardBacklightJSON = activeProfileKeyboardBacklightJSON;
+            }
+        } catch { console.log('tcc-dbus-client.service: unexpected error parsing ProfileKeyboardBacklight'); }
+    }
+
+    const defaultProfilesKeyboardBacklightJSON: string = await this.tccDBusInterface.getDefaultProfilesKeyboardBacklightJSON();
+    const defaultValuesProfileKeyboardBacklightJSON: string = await this.tccDBusInterface.getDefaultValuesProfileKeyboardBacklightJSON();
+    const customProfilesKeyboardBacklightJSON: string = await this.tccDBusInterface.getCustomProfilesKeyboardBacklightJSON();
+    if (defaultProfilesKeyboardBacklightJSON !== undefined && defaultValuesProfileKeyboardBacklightJSON !== undefined && customProfilesKeyboardBacklightJSON !== undefined) {
+        try {
+            if (this.previousDefaultProfilesKeyboardBacklightJSON !== defaultProfilesKeyboardBacklightJSON) {
+                this.defaultProfilesKeyboardBacklight.next(JSON.parse(defaultProfilesKeyboardBacklightJSON));
+                this.previousDefaultProfilesKeyboardBacklightJSON = defaultProfilesKeyboardBacklightJSON;
+            }
+            if (this.previousCustomProfilesKeyboardBacklightJSON !== customProfilesKeyboardBacklightJSON) {
+                this.customProfilesKeyboardBacklight.next(JSON.parse(customProfilesKeyboardBacklightJSON));
+                this.previousCustomProfilesKeyboardBacklightJSON = customProfilesKeyboardBacklightJSON;
+            }
+            if (this.previousDefaultValuesProfileKeyboardBacklightJSON !== defaultValuesProfileKeyboardBacklightJSON) {
+                this.defaultValuesProfileKeyboardBacklight.next(JSON.parse(defaultValuesProfileKeyboardBacklightJSON));
+                this.previousDefaultValuesProfileKeyboardBacklightJSON = defaultValuesProfileKeyboardBacklightJSON;
+            }
+        } catch (err) {
+            console.log('tcc-dbus-client.service: unexpected error parsing profileKeyboardBacklight lists => ' + err);
         }
     }
 

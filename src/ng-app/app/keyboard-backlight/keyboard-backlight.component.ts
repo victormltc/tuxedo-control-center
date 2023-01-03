@@ -20,60 +20,20 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import { Component, OnInit } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { ITccProfileKeyboardBacklight, TccProfileKeyboardBacklight } from '../../../common/models/TccProfileKeyboardBacklight';
+import { Color, colorModes, regions, params, defaultColors } from '../../../common/models/TccProfileKeyboardBacklight';
+import { ConfigServiceKeyboardBacklight } from '../config-keyboard-backlight.service';
 import { UtilsService } from '../utils.service';
-import { noUndefined } from '@angular/compiler/src/util';
+import { Subscription } from 'rxjs';
+import { DBusService } from '../dbus.service';
+import { TccDBusClientService } from '../tcc-dbus-client.service';
+import { FormControl } from '@angular/forms';
+import { LabeledStatement } from 'typescript';
+import { ChartLegendLabelOptions } from 'chart.js';
+import { TccPaths } from 'src/common/classes/TccPaths';
 
 
-class Color{
-    label: string;
-    hex: string;
-    constructor(label: string , hex: string){
-        this.label = label;
-        this.hex = hex;
-    }
-    public toString(): string {
-        return this.label+" ,"+this.hex+" ;"
-    }
-}
 
-class LightProfile {
-    id: string;
-    selected: string;
-    name: string;
-    backlightMode: string;
-    colorMode: string;
-    uniqueColor : string; //for single-color mode
-    colorLeft: string;
-    colorCenter: string;
-    colorRight: string;
-    colorExtra: string;
-    constructor(
-        id: string,
-        selected: string,
-        name: string,
-        backlightMode: string,
-        colorMode: string,
-        uniqueColor: string,
-        colorLeft: string,
-        colorCenter: string,
-        colorRight: string,
-        colorExtra: string,) {
-            this.id = id;
-            this.selected = selected;
-            this.name = name;
-            this.backlightMode = backlightMode;
-            this.colorMode = colorMode;
-            this.uniqueColor = uniqueColor;
-            this.colorLeft = colorLeft;
-            this.colorCenter = colorCenter;
-            this.colorRight = colorRight;
-            this.colorExtra = colorExtra;
-    }
-    public toString(): string {
-        return (this.selected === "true" ? "-[x]- " : "-[ ]-")+"id = "+this.id+" , "+this.name+" , "+this.uniqueColor+" ; "
-    }
-}
 
 @Component({
     selector: 'app-keyboard-backlight',
@@ -86,56 +46,80 @@ export class KeyboardBacklightComponent implements OnInit {
     public selectedColor: Color;
     public availableColors: Array<Color>;
     public inputProfile: string; // profile.id
-    public selectedProfile: LightProfile;
-    public profiles: Array<LightProfile>;
+    public selectedProfile: TccProfileKeyboardBacklight;
+    public profiles: Array<TccProfileKeyboardBacklight>;
 
-    // Back-end : driver settings & conf files
-    public readonly fileMod: number = 0o644;
-    //TODO : removed unused
-    public readonly confPaths = {
-        DEVICE_PATH : '/sys/devices/platform/tuxedo_keyboard/',
-        MODULE_PATH : '/sys/module/tuxedo_keyboard',
-        CUSTOM_COLORS_PATH : '~/.config/tuxedo-control-center/keyboard_backlight_custom_colors.conf',
-        PROFILES_PATH : '~/.config/tuxedo-control-center/keyboard_backlight_profiles.conf'
-    };
-    public readonly regions = {
-        left: 'left', 
-        center:'center', 
-        right: 'right', 
-        extra: 'extra'
-    };
-    public readonly params = {
-        state: 'state',
-        mode: 'mode',
-        color_left: 'color_left',
-        color_center: 'color_center',
-        color_right: 'color_right',
-        color_extra: 'color_extra',
-        brightness: 'brightness'
-    };
+    
+
     
     
     //TODO
     /*
+    ----
+    // écriture des paramètres
+    ----
+    qu'est-ce que le service TCC ?
+    - interface de bas niveau permettant l'écriture des fichiers de config et la modification des paramètres système
+    - dotée d'un fichier "policy" spécifiant la sollicitation des permissions admin pour d'écrire les fichiers
 
+    points problématiques :
+    - quelle est la nature de ce logiciel, d'où vient-il ? 
+        - une simple implémentation de D-Bus ? (système de communicatin sécurisée entre applications)
+        -> TCCD = "Tuxedo Control Center D-bus" ?
+            - pourquoi ne pas utiliser D-Bus par défaut ? pourquoi apporter une nouvelle version pré-compilée ?
+            (pas de code source, juste un binary de ~70MB : dist/.../service/tccd)
+        - tcc - tiny C compiler - existe dans apt mais n'est pas installé sur ma machine
+        - pas de référence sur internet liées à autre chose que le projet de Tuxedo
+    - utilisé via pkexec <exec path> --<option : saved objects type> <tmp path = data to be saved>
+        - quel est le comportement interne de ce logiciel : comment faire pour l'utiliser afin d'écrire dans les fichiers de conf du driver ?
+    - si l'on décide de passer par un autre moyen d'écrire les fichiers de conf, cela implique-t-il des risques de sécurité ?
+
+    ----
+    // sauvegarde des couleurs custom
+    ----
+    voir s'il est facile/pratique de créer le fichiers de couleurs en tant que tel, avec les implications back-end
+    -> sinon : faire passer les custom colors par un faux profil ? ou bien créer un attribut customColors pour tous les profils, 
+    dont la valeur est constamment mise à jour pour tous les profils en même temps, permet de ne pas se taper tout le back-end, 
+    et on les récupère en faisant un check sur l'id et on parse par exemple le nom qui sera en réalité un tableau d'objets Color
+
+    ----
+    // TODO list
+    ----
+    - pkexec /.../tccd --new_XXX : comment créer / vérifier l'effet de ces options ?
+    - Ctrl F 'TODO'
     - SINGLE profile back-end connection : don't care yet about the others
         not working yet : check whole python code
     - single color change
-    - brightness change (see ui's fork)
-    - set back restrictive permissions on leave ? 
-        - what is 'leave' ? ngOnInit() is performed at each sidebar press
+    - brightness change (see ui fork)
+    - TccDBusController.ts : add getters for current keyboard state ?
     - other features from backlight python
+       -> config-keyboard-backlight.service.ts : ajouter un set de méthodes complet
+    - tests unitaires (*.spec.ts)
     - nettoyer le code
+        component
+        tccprofile
+        config
+        confighandler
+        utils.service.ts
+        tcc-dbus-client.service.ts
+        tccDBusService.ts
+    - bonus esthétiques
+    - détection de compatibilité -> affichage dynamique des options
+    - raccourcis clavier? 
     */
 
     constructor(
-        private utils: UtilsService
+        private utils: UtilsService,
+        private config: ConfigServiceKeyboardBacklight
     ) { }
 
     ngOnInit() {
+
+
         this.availableColors = new Array<Color>();
+        /*
         this.profiles = new Array<LightProfile>();
-        this.allowDeviceSettingsChange();
+        //this.allowDeviceSettingsChange();
 
         // demo
         this.addProfile(new LightProfile("jacky","false","tuning","bip","bip","00FF00","bip","bip","bip","bip"));
@@ -144,7 +128,7 @@ export class KeyboardBacklightComponent implements OnInit {
 
         this.updateProfiles(); // includes selectedProfile initialisation
         this.inputProfile = this.selectedProfile.id;
-
+        */
         // plus tard : à aller chercher dans les fichiers de conf
         this.availableColors = this.genDefaultColors();
         this.selectedColor = this.availableColors[4];
@@ -165,47 +149,72 @@ export class KeyboardBacklightComponent implements OnInit {
         
         // susceptible to change with multi-colors support
         this.selectedProfile.uniqueColor = this.selectedColor.hex;
-        this.setDeviceParam(this.params.color_left, this.selectedProfile.uniqueColor);
+        this.config
+        //this.setDeviceParam(this.selectedProfile.params.color_left, this.selectedProfile.uniqueColor);
+        
     }
 
 
-    public genDefaultColors(): Array<Color> {
-        let rawSet: Array<string> = [
-            'aqua', '00FFFF',
-            'blue', '0000FF',
-            'crimson', 'DC143C',
-            'fuchsia', 'FF00FF',
-            'gray', '808080',
-            'green', '008000',
-            'lime', '00FF00',
-            'maroon', '800000',
-            'navy', '000080',
-            'olive', '808000',
-            'orange', 'FFA500',
-            'pink', 'FFC0CB',
-            'purple', '800080',
-            'red', 'FF0000',
-            'silver', 'C0C0C0',
-            'teal', '008080',
-            'turquoise', '40E0D0',
-            'white', 'FFFFFF',
-            'yellow', 'FFFF00'
-        ];
-        let colors = new Array<Color>() //il fallait initialiser cet objet avec un constructeur
-        let label: string = ""
-        let hex: string = ""
+    
 
-        rawSet.forEach(function(value: string, index: number){
-            if (index % 2 === 0){
-                label = value
-            }else{
-                hex = value
-                colors.push(new Color(label,hex))
-            }
-        });
+    public genDefaultColors(): Array<Color> {
+        
+        let colors = new Array<Color>()
+        const labels: string[] = Object.keys(defaultColors)
+        const hexCodes: string[] = Object.values(defaultColors)
+        
+        for(let i = 0; i < labels.length; i++){
+            colors.push(new Color(labels[i], hexCodes[i]))
+        }
         return colors
     }
 
+    // les fonctions writeFile
+
+    public async buttonSetupPerm() {
+        
+        try {
+            this.allowDeviceSettingsChange();
+        } catch (err) {
+            this.popUp('setup perm',err + ' \n---\n ' + err.toString())
+            throw err;
+        }
+    }
+
+    public async buttonWriteFileAsync(): Promise<void> {
+        return new Promise<void>((resolve, reject) => {
+            fs.writeFile('/sys/devices/platform/tuxedo_keyboard/color_left', 'ffffff', (err) => {
+                if (err) {
+                    this.popUp('writeFileAsync',err + ' \n---\n ' + err.toString())
+                    reject(err)
+                } else {
+                    resolve();
+                }
+            });
+        });
+    }
+
+    public buttonWriteFileSync(){
+        try {
+            fs.writeFileSync('/sys/devices/platform/tuxedo_keyboard/color_left', 'ffffff');
+        } catch (err) {
+            this.popUp('writeFileSync',err + ' \n---\n ' + err.toString())
+            throw err;
+        }
+        
+    }
+
+    //for testing purposes
+    public async popUp(title: string, msg: string) {
+        const dialogWindow = await this.utils.confirmDialog({
+            title: title,
+            description: msg,
+            buttonAbortLabel: "ok",
+            buttonConfirmLabel: "dak"
+        });
+    }
+
+/*
     public genProfile(){
         const randomId = this.generateProfileId();
         //const randomId: string = (this.profiles.length).toString();
@@ -286,15 +295,7 @@ export class KeyboardBacklightComponent implements OnInit {
         }
     }
 
-    //for testing purposes
-    public async popUp(title: string, msg: string) {
-        const dialogWindow = await this.utils.confirmDialog({
-            title: title,
-            description: msg,
-            buttonAbortLabel: "ok",
-            buttonConfirmLabel: "dak"
-        });
-    }
+    
 
 
     ///////////////////   BACK-END : tuxedo-keyboard driver & conf files settings   //////////////////////////////////////////////////////////
@@ -303,41 +304,14 @@ export class KeyboardBacklightComponent implements OnInit {
     //  + fork (brightness control) : https://github.com/encarsia/tuxedo-backlight-control
     // let the user pick a file by hand : https://developer.mozilla.org/en-US/docs/Web/API/FileSystemFileHandle
 
-    private allowDeviceSettingsChange(){
-        let oneliner = '';
-        const fileNameList: string[] = [
-            this.params.brightness,
-            this.params.color_center,
-            this.params.color_extra,
-            this.params.color_left,
-            this.params.color_right,
-            this.params.mode,
-            this.params.state
-        ]
-        oneliner += 'cd /sys/devices/platform/tuxedo_keyboard/ && '
-        fileNameList.forEach(fileName => {
-            oneliner += 'chmod a+w ' + fileName + ' && '
-        });
-        oneliner = oneliner.slice(0, -4); // remove the tailing " && "
 
-        return this.utils.execCmd(`pkexec /bin/sh -c "` + oneliner + `"`).then(() => {
-            //this.popUp('permissions','success : '+oneliner);
-            
-            // this.successtext_cryptsetup = $localize `:@@cryptfinishprocess:Crypt password changed successfully`;
-            // this.errortext_cryptsetup = '';
-        }).catch(() => {
-            //this.popUp('permissions','failure : '+oneliner);
-
-            // this.successtext_cryptsetup = '';
-            // this.errortext_cryptsetup = $localize `:@@errornewpassword:Error: Could not change crypt password (wrong old crypt password?)`;
-        });
-    }
+    
 
     public setDeviceParam(par: string, value: string){
         // write driver param value to this.confPaths.DEVICE_PATH, i.e. '/sys/devices/platform/tuxedo_keyboard/'
         // those parameters are simple strings : 'e95420', '75', '1'
         if(Object.values(this.params).includes(par)){
-            this.writeConfig(value, this.confPaths.DEVICE_PATH + par, { mode: this.fileMod })
+            this.config.writeConfig(value, this.confPaths.DEVICE_PATH + par, { mode: this.fileMod })
         }
         else return 'error'
     }
@@ -346,12 +320,101 @@ export class KeyboardBacklightComponent implements OnInit {
         // read driver param value directly from this.confPaths.DEVICE_PATH, i.e. '/sys/devices/platform/tuxedo_keyboard/'
         if(Object.values(this.params).includes(par)){
             if(fs.existsSync(this.confPaths.DEVICE_PATH + par)){
-                return this.readConfig<string>(this.confPaths.DEVICE_PATH + par)
+                return this.config.readConfig<string>(this.confPaths.DEVICE_PATH + par)
             }
             else return 'error'
         }
         else return 'error'
     }
+*/
+    /* FILE WRITING TRACE ////////////////////////////////////////////////////////////////
+
+    global-settings.component.html
+        <mat-checkbox #inputCPUSettings
+            color="primary"
+            [(ngModel)]="cpuSettingsEnabled"
+            (change)="onCPUSettingsEnabledChanged($event)">
+        </mat-checkbox>
+
+    global-settings.component.ts :
+    -> onCPUSettingsEnabledChanged(event: any)
+        this.config.saveSettings().then(success => {
+            if (!success) {
+                this.config.getSettings().cpuSettingsEnabled = !event.checked;
+            }  
+            this.cpuSettingsEnabled = this.config.getSettings().cpuSettingsEnabled
+            this.utils.pageDisabled = false;
+        });
+    
+    private config: ConfigService
+    -> saveSettings() --> pkexecWriteConfigAsync()
+    
+    -> configHandler !!
+    
+    */////////////////////////////////////////////////////////////////
+
+
+
+    
+    private async allowDeviceSettingsChange(){
+        const userName = (await this.utils.execCmd('whoami')).toString()
+        let cmdCd = 'cd '+ TccPaths.KB_DRIVER_DIR;
+        let cmdChmod = ' sudo chmod a+w ';
+        let cmdChown = ' sudo chown ' + userName + ' ';
+        let cmdChgrp = ' sudo chgrp ' + userName + ' ';
+        const fileNameList: string[] = [
+            params.brightness,
+            params.color_center,
+            params.color_extra,
+            params.color_left,
+            params.color_right,
+            params.mode,
+            params.state
+        ]
+
+        fileNameList.forEach(fileName => {
+            cmdChmod += fileName + ' ';
+            cmdChown += fileName + ' ';
+            cmdChgrp += fileName + ' ';
+        });
+        cmdChmod +=  cmdCd + ' && ' + cmdChmod;
+        cmdChown +=  cmdCd + ' && ' + cmdChown;
+        cmdChgrp +=  cmdCd + ' && ' + cmdChgrp;
+
+        //oneliner += cmdChgrp + cmdChmod + cmdChown
+        //oneliner = oneliner.slice(0, -4); // remove the tailing " && "
+
+        
+        try {
+            //this.utils.execCmd(`pkexec /bin/sh -c --user root "` + oneliner + `"`);
+            this.utils.execCmd(cmdChmod);
+            this.popUp('chmod : ok ?',cmdChmod)
+        } catch (err) {
+            this.popUp('chmod : failure',cmdChmod + ' \n---\n ' + err.toString())
+            throw err;
+        }
+        try {
+            //this.utils.execCmd(`pkexec /bin/sh -c --user root "` + oneliner + `"`);
+            this.utils.execCmd(cmdChown);
+            this.popUp('chown : ok ?',cmdChown)
+        } catch (err) {
+            this.popUp('chown : failure',cmdChown + ' \n---\n ' + err.toString())
+            throw err;
+        }
+        try {
+            //this.utils.execCmd(`pkexec /bin/sh -c --user root "` + oneliner + `"`);
+            this.utils.execCmd(cmdChgrp);
+            this.popUp('chgrp : ok ?',cmdChgrp)
+        } catch (err) {
+            this.popUp('chgrp : failure',cmdChgrp + ' \n---\n ' + err.toString())
+            throw err;
+        }
+    }
+    
+
+    
+
+    /*
 
     public readConfig<T>(filename: string): T {
         let config: T;
@@ -371,26 +434,40 @@ export class KeyboardBacklightComponent implements OnInit {
         return config;
     }
 
-    public writeConfig<T>(config: T, filePath: string, WriteFileOptions): void {
+    
+    public writeConfig<T>(config: T, filePath: string, writeFileOptions: any): void {
         const fileData = JSON.stringify(config);
         try {
             if (!fs.existsSync(path.dirname(filePath))) {
-                fs.mkdirSync(path.dirname(filePath), { mode: 0o755, recursive: true });
+                // this should never happen, as tuxedo-keyboard is included in tuxedo-control-center
+                fs.mkdirSync(path.dirname(filePath), { mode: 0o644, recursive: true });
             }
-            fs.writeFileSync(filePath, fileData, WriteFileOptions);
-
-            //test
-            this.popUp('write success',filePath +' = '+ fileData);
-        } catch (err) {
-            //test
-            this.popUp('write error',filePath +' = '+ fileData +' : '+ err.toString());
-
-            throw err;
+            fs.writeFileSync(filePath, fileData, writeFileOptions);
 
             
+            const bashCommand = 'rm -f '+ filePath +' && cat '+ fileData +' > '+ filePath // rm : operation not allowed
+            this.utils.execCmd(`pkexec /bin/sh -c "` + bashCommand + `"`).then(() => {
+                this.popUp('write','success : '+bashCommand);
+                
+                // this.successtext_cryptsetup = $localize `:@@cryptfinishprocess:Crypt password changed successfully`;
+                // this.errortext_cryptsetup = '';
+            }).catch(() => {
+                this.popUp('write','failure : '+bashCommand);
+    
+                // this.successtext_cryptsetup = '';
+                // this.errortext_cryptsetup = $localize `:@@errornewpassword:Error: Could not change crypt password (wrong old crypt password?)`;
+            });
+            
+
+            //test
+            //this.popUp('write success',filePath +' = '+ fileData);
+        } catch (err) {
+            //test
+            this.popUp('write error',filePath +' <-- '+ fileData +' : '+ err.toString());
+
+            throw err;    
         }
     }
-        
 
     public readProfiles(filePath: string = this.confPaths.PROFILES_PATH): LightProfile[] {
         let idUpdated = false;
@@ -418,5 +495,21 @@ export class KeyboardBacklightComponent implements OnInit {
         return Math.random().toString(36).slice(2) + Date.now().toString(36);
     }
     
+    private userConfigDirExists(dir: string): boolean {
+        try {
+            return fs.existsSync(dir);
+        } catch (err) {
+            return false;
+        }
+    }
     
+    private createUserConfigDir(dir: string): boolean {
+        try {
+            fs.mkdirSync(dir);
+            return true;
+        } catch (err) {
+            return false;
+        }
+    }
+    */
 }

@@ -259,6 +259,63 @@ export class TccDBusController {
         }
     }
 
+
+    async getActiveProfileKeyboardBacklightJSON(): Promise<string> {
+        try {
+            return await this.interface.GetActiveProfileKeyboardBacklightJSON();
+        } catch (err) {
+            return undefined;
+        }
+    }
+
+    async setTempProfileKeyboardBacklightName(ProfileKeyboardBacklightName: string): Promise<boolean> {
+        try {
+            return await this.interface.SetTempProfileKeyboardBacklight(ProfileKeyboardBacklightName);
+        } catch (err) {
+            return false;
+        }
+    }
+
+    async setTempProfileKeyboardBacklightById(ProfileKeyboardBacklightId: string): Promise<boolean> {
+        try {
+            return await this.interface.SetTempProfileKeyboardBacklightById(ProfileKeyboardBacklightId);
+        } catch (err) {
+            return false;
+        }
+    }
+
+    async getProfilesKeyboardBacklightJSON(): Promise<string> {
+        try {
+            return await this.interface.GetProfilesKeyboardBacklightJSON();
+        } catch (err) {
+            return undefined;
+        }
+    }
+
+    async getCustomProfilesKeyboardBacklightJSON(): Promise<string> {
+        try {
+            return await this.interface.GetCustomProfilesKeyboardBacklightJSON();
+        } catch (err) {
+            return undefined;
+        }
+    }
+
+    async getDefaultProfilesKeyboardBacklightJSON(): Promise<string> {
+        try {
+            return await this.interface.GetDefaultProfilesKeyboardBacklightJSON();
+        } catch (err) {
+            return undefined;
+        }
+    }
+
+    async getDefaultValuesProfileKeyboardBacklightJSON(): Promise<string> {
+        try {
+            return await this.interface.GetDefaultValuesProfileKeyboardBacklightJSON();
+        } catch (err) {
+            return undefined;
+        }
+    }
+
     onModeReapplyPendingChanged(callback_function) {
         this.interface.on('ModeReapplyPendingChanged', callback_function);
     }
