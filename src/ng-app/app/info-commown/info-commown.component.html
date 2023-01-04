@@ -34,17 +34,17 @@ along with TUXEDO Control Center.  If not, see <https://www.gnu.org/licenses/>.
         <mat-divider class="divider-separator"></mat-divider>
 
         <div>
-            <p><i>Ce logiciel est adapté par Commown à partir d'un logiciel libre développé et maintenu par TUXEDO.</i></p>
+            <p i18n="@@commownInfoHeader1">This software is adapted by Commown from an free software project developped and maintained by Tuxedo</p>
             <button mat-raised-button color="basic" (click)="openExternalUrl('https://fr.wikipedia.org/wiki/Logiciel_libre')">
-                <strong><i>+ d'infos sur le logiciel libre</i></strong>
+                <strong i18n="@@commownInfoFreeSoftware"><i>More info about free software</i></strong>
             </button>
-            <p i18n="@@cInfoTCCDescriptionTextP1">
-                With the TUXEDO Control Center, we have developed a unique tool for you to control and monitor all
-                safety, performance, energy, comfort, and lifetime functions of your TUXEDO computer.
+            <p i18n="@@commownInfoHeaderTCCDescription">
+                The TUXEDO Control Center is a unique tool for you to control and monitor all
+                safety, performance, energy, comfort, and lifetime functions of your computer.
             </p>
-            <p i18n="@@cInfoTCCDescriptionTextP2">
+            <p i18n="@@commownInfoHeaderTCCDescription2">
                 With premade as well as any number of individually configurable profiles, you have
-                the greatest possible control and adaptability of your TUXEDO device to your needs.
+                the greatest possible control and adaptability on your device.
             </p>
         </div>
 
@@ -69,8 +69,8 @@ along with TUXEDO Control Center.  If not, see <https://www.gnu.org/licenses/>.
                     <strong>TUXEDO</strong>
                 </button>
                 <p>&nbsp;</p>
-                <button mat-raised-button color="basic" (click)="openExternalUrl('https://github.com/tuxedocomputers/')">
-                    Code source d'origine
+                <button mat-raised-button color="" (click)="openExternalUrl('https://github.com/tuxedocomputers/')">
+                    <div i18n="@@commownInfoSourceCodeOrigin">Original source code</div>
                 </button>
             </mat-grid-tile>
             <mat-grid-tile>
@@ -78,8 +78,8 @@ along with TUXEDO Control Center.  If not, see <https://www.gnu.org/licenses/>.
                     <strong>Commown</strong>
                 </button>
                 <p>&nbsp;</p>
-                <button mat-raised-button color="basic" (click)="openExternalUrl('https://github.com/victormltc/tuxedo-control-center/tree/commown')">
-                    Code source adapté
+                <button mat-raised-button color="" (click)="openExternalUrl('https://github.com/victormltc/tuxedo-control-center/tree/commown')">
+                    <div i18n="@@commownInfoSourceCodeCommown">Modified source code</div>
                 </button>
             </mat-grid-tile>
         </mat-grid-list>
@@ -192,7 +192,7 @@ GNU General Public License for more details.
             </mat-panel-title>
         </mat-expansion-panel-header>
         <mat-divider></mat-divider>
-        <pre><code>
+        <pre><code i18n="@@commownCInfoImprintText">
 Commown
 
 8 av. Dante
@@ -200,7 +200,7 @@ Pépinière de Hautepierre
 67200 Strasbourg
 FRANCE
 
-Commown est Société Coopérative d’Intérêt Collectif basée sur une Société Anonyme.
+Commown is a SCIC (Cooperative Society of Collective Interest) based on an Anonymous Society (SA).
 SIREN 828 811 489
         </code></pre>
         <mat-divider></mat-divider>
