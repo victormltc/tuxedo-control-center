@@ -21,7 +21,9 @@ import { Routes, RouterModule } from '@angular/router';
 
 import { ProfileManagerComponent } from './profile-manager/profile-manager.component';
 import { SupportComponent } from './support/support.component';
+import { SupportCommownComponent } from './support-commown/support-commown.component';
 import { InfoComponent } from './info/info.component';
+import { InfoCommownComponent } from './info-commown/info-commown.component';
 import { CpuDashboardComponent } from './cpu-dashboard/cpu-dashboard.component';
 import { ToolsComponent } from "./tools/tool.component";
 import { GlobalSettingsComponent } from './global-settings/global-settings.component';
@@ -36,7 +38,9 @@ const routes: Routes = [
             { path: 'profile-manager', component: ProfileManagerComponent },
             { path: 'profile-manager/:profileId', component: ProfileManagerComponent },
             { path: 'support', component: SupportComponent },
+            { path: 'support-commown', component: SupportCommownComponent },
             { path: 'info', component: InfoComponent },
+            { path: 'info-commmown', component: InfoCommownComponent },
             { path: 'cpu-dashboard', component: CpuDashboardComponent },
             { path: 'tools', component: ToolsComponent },
             { path: 'global-settings', component: GlobalSettingsComponent },

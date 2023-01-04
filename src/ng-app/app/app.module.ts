@@ -57,10 +57,12 @@ import { MatMenuModule } from '@angular/material/menu'
 import { DecimalPipe, registerLocaleData } from '@angular/common';
 import { ProfileManagerComponent } from './profile-manager/profile-manager.component';
 import { SupportComponent } from './support/support.component';
+import { SupportCommownComponent } from './support-commown/support-commown.component';
 import { HttpClientModule } from '@angular/common/http';
 import { ProfileOverviewTileComponent } from './profile-overview-tile/profile-overview-tile.component';
 import { ProfileDetailsEditComponent } from './profile-details-edit/profile-details-edit.component';
 import { InfoComponent } from './info/info.component';
+import { InfoCommownComponent } from './info-commown/info-commown.component';
 
 import { MarkdownModule } from 'ngx-markdown';
 import { CpuDashboardComponent } from './cpu-dashboard/cpu-dashboard.component';
@@ -98,9 +100,11 @@ declare const require;
     AppComponent,
     ProfileManagerComponent,
     SupportComponent,
+    SupportCommownComponent,
     ProfileOverviewTileComponent,
     ProfileDetailsEditComponent,
     InfoComponent,
+    InfoCommownComponent,
     CpuDashboardComponent,
     GlobalSettingsComponent,
     ShutdownTimerComponent,

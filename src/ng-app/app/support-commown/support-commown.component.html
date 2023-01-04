@@ -1,0 +1,59 @@
+<!--
+Copyright (c) 2019-2021 TUXEDO Computers GmbH <tux@tuxedocomputers.com>
+
+This file is part of TUXEDO Control Center.
+
+TUXEDO Control Center is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+TUXEDO Control Center is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with TUXEDO Control Center.  If not, see <https://www.gnu.org/licenses/>.
+-->
+<mat-card class="tcc-card card-support">
+    <mat-card-title class="theme-page-title">
+        <ng-container i18n>Support Commown</ng-container>
+    </mat-card-title>
+    <hr />
+    
+    <div class="content-container centered">
+        <p i18n>Vous avez un problème avec votre appareil Commown ?</p>
+        <p i18n>Retrouvez nos ressources d'aide technique sur notre <b>wiki</b>, ou contactez nous directement via votre <b>espace personnel</b>.</p>
+        
+
+        <mat-grid-list cols="3" rowHeight="100px">
+            <mat-grid-tile>
+                <div class="web-info">
+                    <svg viewBox="0 0 512 512" class="tcc-icons"><use href="./assets/images/icon_logbook.svg#Icon"></use></svg>
+                    <button mat-raised-button color="basic" (click)="openExternalUrl('https://wiki.commown.coop/Accueil')">
+                        <strong>Wiki</strong>
+                    </button>
+                </div>
+            </mat-grid-tile>
+            <mat-grid-tile>
+                <div class="web-info">
+                    <svg viewBox="0 0 512 512" class="tcc-icons"><use href="./assets/images/icon_info.svg#Icon"></use></svg>
+                    <button mat-raised-button color="basic" (click)="openExternalUrl('https://shop.commown.coop/my/home')">
+                        <strong>Espace personnel</strong>
+                    </button>
+                </div>
+            </mat-grid-tile>
+            <mat-grid-tile>
+                <div class="web-info">
+                    <svg viewBox="0 0 512 512" class="tcc-icons"><use href="./assets/images/commown_logo_notext.svg#Icon"></use></svg>
+                    <button mat-raised-button color="basic" (click)="openExternalUrl('https://commown.coop')">
+                        <strong>Page d'accueil de Commown</strong>
+                    </button>
+                </div>
+            </mat-grid-tile>
+        </mat-grid-list>
+    </div>
+</mat-card>
+
+<br />

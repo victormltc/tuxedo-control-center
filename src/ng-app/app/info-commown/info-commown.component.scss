@@ -1,0 +1,84 @@
+/*!
+ * Copyright (c) 2019 TUXEDO Computers GmbH <tux@tuxedocomputers.com>
+ *
+ * This file is part of TUXEDO Control Center.
+ *
+ * TUXEDO Control Center is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * TUXEDO Control Center is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with TUXEDO Control Center.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
+ .logo {
+    width: 200px;
+}
+
+.content-container {
+    max-width: 900px;
+    margin:auto;
+    text-align: center;
+}
+
+.updates-table {
+    width:300px;
+    margin:auto;
+    text-align:left;
+    margin-bottom: 20px;
+}
+
+.update-button {
+    margin-bottom: 20px;
+}
+
+.infoseparator {
+    position: static;
+    width: 200px;
+    right:0;
+    margin: auto;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.accordion-info {
+    p {
+        font-size: 1.2em;;
+    }
+}
+
+table.versions {
+    tr {
+        td {
+            width: 250px;
+            border-bottom: 1pt solid lightgray;
+        }
+    }
+}
+
+.changelog {
+    max-height: 250px;
+    overflow-y: scroll;
+}
+
+.language-select {
+    mat-select-trigger {
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+
+        mat-icon {
+            margin-right: 16px;
+        }
+    }
+}
+
+.content-container mat-divider.divider-separator {
+    position: static; width: 200px; margin: auto; margin-top: 20px; margin-bottom: 20px;
+}
