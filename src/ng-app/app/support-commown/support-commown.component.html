@@ -18,13 +18,13 @@ along with TUXEDO Control Center.  If not, see <https://www.gnu.org/licenses/>.
 -->
 <mat-card class="tcc-card card-support">
     <mat-card-title class="theme-page-title">
-        <ng-container i18n>Support Commown</ng-container>
+        <ng-container i18n="@@commownSupportTitle">Commown Support</ng-container>
     </mat-card-title>
     <hr />
     
     <div class="content-container centered">
-        <p i18n>Vous avez un problème avec votre appareil Commown ?</p>
-        <p i18n>Retrouvez nos ressources d'aide technique sur notre <b>wiki</b>, ou contactez nous directement via votre <b>espace personnel</b>.</p>
+        <p i18n="@@commownSupportHeader1">Do you have a problem with your Commown device ?</p>
+        <p i18n="@@commownSupportHeader2">You may find technical resources in our <b>wiki</b>, or contact us directly via your <b>personal space</b>.</p>
         
 
         <mat-grid-list cols="3" rowHeight="100px">
@@ -40,7 +40,7 @@ along with TUXEDO Control Center.  If not, see <https://www.gnu.org/licenses/>.
                 <div class="web-info">
                     <svg viewBox="0 0 512 512" class="tcc-icons"><use href="./assets/images/icon_info.svg#Icon"></use></svg>
                     <button mat-raised-button color="basic" (click)="openExternalUrl('https://shop.commown.coop/my/home')">
-                        <strong>Espace personnel</strong>
+                        <strong i18n="@@commownSupportPersonalSpace">My personal space</strong>
                     </button>
                 </div>
             </mat-grid-tile>
@@ -48,7 +48,7 @@ along with TUXEDO Control Center.  If not, see <https://www.gnu.org/licenses/>.
                 <div class="web-info">
                     <svg viewBox="0 0 512 512" class="tcc-icons"><use href="./assets/images/commown_logo_notext.svg#Icon"></use></svg>
                     <button mat-raised-button color="basic" (click)="openExternalUrl('https://commown.coop')">
-                        <strong>Page d'accueil de Commown</strong>
+                        <strong i18n="@@commownSupportCommownWebsite">Commown Website</strong>
                     </button>
                 </div>
             </mat-grid-tile>
