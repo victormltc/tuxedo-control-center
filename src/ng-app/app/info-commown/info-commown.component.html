@@ -23,12 +23,12 @@ along with TUXEDO Control Center.  If not, see <https://www.gnu.org/licenses/>.
     <hr />
     
     <div class="content-container">
-        <mat-grid-list cols="2" rowHeight="200px">
+        <mat-grid-list cols="2" rowHeight="100px">
             <mat-grid-tile>
-                <svg viewBox="0 0 63.138672 43.930508" class="logo"><use href="./assets/images/tcc_logo_complete.svg#Icon"></use></svg>
+                <svg height="100" width="200" viewBox="0 0 63.138672 43.930508" class="logo"><use href="./assets/images/tcc_logo_complete.svg#Icon"></use></svg>
             </mat-grid-tile>
             <mat-grid-tile>
-                <svg viewBox="0 0 43.930508 43.930508" class="logo"><use href="./assets/images/commown_logo.svg#Icon"></use></svg>
+                <svg height="100" width="200" viewBox="0 0 43.930508 43.930508" class="logo"><use href="./assets/images/commown_logo.svg#Icon"></use></svg>
             </mat-grid-tile>
         </mat-grid-list>
         <mat-divider class="divider-separator"></mat-divider>
@@ -48,22 +48,7 @@ along with TUXEDO Control Center.  If not, see <https://www.gnu.org/licenses/>.
             </p>
         </div>
 
-        <mat-divider style="position: static; width: 200px; margin: auto; margin-top: 20px; margin-bottom: 20px;"></mat-divider>
-
-        <table class="updates-table">
-            <tr>
-                <td>
-                    <ng-container i18n>Installed version</ng-container>:
-                </td>
-                <td>
-                    {{ appVersion }}
-                </td>
-            </tr>
-        </table>
-
-        <mat-divider style="position: static; width: 200px; margin: auto; margin-top: 20px; margin-bottom: 20px;"></mat-divider>
-
-        <mat-grid-list cols="2" rowHeight="50px">
+        <mat-grid-list cols="2" rowHeight="40px">
             <mat-grid-tile>
                 <button mat-raised-button color="basic" (click)="openExternalUrl('https://www.tuxedocomputers.com/en/')">
                     <strong>TUXEDO</strong>
@@ -83,6 +68,23 @@ along with TUXEDO Control Center.  If not, see <https://www.gnu.org/licenses/>.
                 </button>
             </mat-grid-tile>
         </mat-grid-list>
+
+        <mat-divider style="position: static; width: 200px; margin: auto; margin-top: 20px; margin-bottom: 20px;"></mat-divider>
+
+        <table class="updates-table">
+            <tr>
+                <td>
+                    <ng-container i18n>Installed version</ng-container>:
+                </td>
+                <td>
+                    {{ appVersion }}
+                </td>
+            </tr>
+        </table>
+
+        
+
+        
 
         <!--div class="update-button">
             <button mat-raised-button color="basic">
