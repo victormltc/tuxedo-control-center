@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with TUXEDO Control Center.  If not, see <https://www.gnu.org/licenses/>.
  */
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ElectronService } from 'ngx-electron';
 import { Subscription } from 'rxjs';
 import { ITccProfile } from '../../../common/models/TccProfile';
@@ -127,6 +127,11 @@ export class MainGuiComponent implements OnInit, OnDestroy {
         let newLangID: string = this.utils.getLanguagesMenuArray()[newLangIndex].id
         this.utils.changeLanguage(newLangID);
         this.updateLanguageName();
+    }
+
+    @ViewChild('selectLang') selectLang;
+    openSelectLang() {
+        this.selectLang.toggle();
     }
 
     //old version with only two languages
