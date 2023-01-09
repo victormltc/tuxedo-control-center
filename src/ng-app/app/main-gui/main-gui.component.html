@@ -102,15 +102,16 @@ along with TUXEDO Control Center.  If not, see <https://www.gnu.org/licenses/>.
                 <mat-list-item (click)="openSelectLang()">
                     <content>
                         <mat-icon><svg viewBox="0 0 512 512">
-                            <use href="./assets/images/icon_language.svg#Icon"></use>
-                        </svg></mat-icon>
-                        {{ buttonLanguageLabel }}
+                                <use href="./assets/images/icon_language.svg#Icon"></use>
+                            </svg></mat-icon>
+                        <ng-container i18n="@@menuLanguage">Language</ng-container>
                         <mat-select #selectLang>
                             <mat-select-trigger></mat-select-trigger>
                             <mat-option
                                 *ngFor="let lang of getLanguagesMenuArray()"
                                 (click)="changeLanguage(lang.id)"
-                                [value]="lang.id">
+                                [value]="lang.id"
+                                [disabled]="languageDisabled(lang.id)">
                                 <mat-icon><img [src]="'./assets/images/' + lang.img" /></mat-icon> {{ lang.label }}
                             </mat-option>
                         </mat-select>

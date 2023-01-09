@@ -148,6 +148,10 @@ export class MainGuiComponent implements OnInit, OnDestroy {
         this.buttonLanguageLabel = nextLangLabel;
     }
 
+    public languageDisabled(langId: string){
+        return (this.utils.getCurrentLanguageId() === langId ? true : false);
+    }
+
     public getStateInputs(): IStateInfo[] {
         return this.state.getStateInputs();
     }
