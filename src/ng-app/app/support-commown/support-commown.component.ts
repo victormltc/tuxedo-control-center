@@ -16,12 +16,12 @@
  * You should have received a copy of the GNU General Public License
  * along with TUXEDO Control Center.  If not, see <https://www.gnu.org/licenses/>.
  */
+import * as fs from 'fs';
+
 import { Component, OnInit } from '@angular/core';
 import { ElectronService } from 'ngx-electron';
 import { ProgramManagementService } from '../program-management.service';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { UtilsService } from '../utils.service';
-import { MatStepper } from '@angular/material/stepper';
 import { STEPPER_GLOBAL_OPTIONS } from '@angular/cdk/stepper';
 
 @Component({
@@ -37,22 +37,62 @@ import { STEPPER_GLOBAL_OPTIONS } from '@angular/cdk/stepper';
 })
 export class SupportCommownComponent implements OnInit {
 
-  constructor(
-    private electron: ElectronService,
-    private program: ProgramManagementService,
-    private utils: UtilsService
-  ) { }
+    public exportResults: string = '.';
+    public logsExported: boolean = false;
 
-  ngOnInit() {
-    // nada
-  }
+    constructor(
+        private electron: ElectronService,
+        private program: ProgramManagementService,
+        private utils: UtilsService
+    ) { }
 
-  public focusControl(control): void {
-    setImmediate(() => { control.focus(); });
-  }
+    ngOnInit() {
+        
+    }
 
-  public openExternalUrl(url: string): void {
-    this.electron.shell.openExternal(url);
-  }
+    public focusControl(control): void {
+        setImmediate(() => { control.focus(); });
+    }
+
+    public openExternalUrl(url: string): void {
+        this.electron.shell.openExternal(url);
+    }
+
+    public openSystemMonitor(): void {
+        this.utils.execCmd('gnome-system-monitor -r');
+    }
+
+    public genLogs(): void {
+        this.exportResults += 'previous length = ' + this.exportResults.length + '<br/>';
+        this.logsExported = true;
+    }
+
+    public getLogsExported(): boolean {
+        return this.logsExported;
+    }
+
+    public showMessage(){
+        this.electron.remote.dialog.showMessageBox(
+            this.electron.remote.getCurrentWindow(),
+            {
+              title: 'Bonjour',
+              //message: $localize `:@@msgboxMessageServiceUnavailable:Communication with tccd service is unavailable, please restart service and try again.`,
+              message: 'tout va bien',
+              type: 'error',
+              buttons: ['ok']
+            }
+          );
+    }
+
+    public writeFile(path: string, data: string): boolean {
+        try {
+            fs.writeFileSync(path, data);
+            return true;
+        } catch (err) {
+            return false;
+        }
+    }
+
+    
 
 }

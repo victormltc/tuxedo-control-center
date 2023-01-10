@@ -40,3 +40,10 @@
         }
     }
 }
+
+.export-results { // same as 'changelog' class in info component
+    max-height: 250px;
+    height: 80%;
+    margin-top: 8px;
+    overflow-y: scroll;
+}

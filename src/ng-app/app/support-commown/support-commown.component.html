@@ -53,6 +53,27 @@ along with TUXEDO Control Center.  If not, see <https://www.gnu.org/licenses/>.
                 </div>
             </mat-grid-tile>
         </mat-grid-list>
+
+        <p><br><br></p>
+
+        <mat-divider class="divider-separator"></mat-divider>
+
+        <mat-grid-list cols="2" rowHeight="100px">
+            <mat-grid-tile width="80px">
+                <button mat-raised-button color="basic" display="block" (click)="openSystemMonitor()">
+                    <strong>System Monitor</strong>
+                </button>
+                <button mat-raised-button color="basic" display="block" (click)="genLogs()">
+                    <strong>Message</strong>
+                </button>
+            </mat-grid-tile>
+            <mat-grid-tile width="100%" *ngIf=getLogsExported()>
+                <p display="block" ><b>Export des logs :</b></p>
+                <mat-card display="block" class="export-results">
+                    <p>{{exportResults}}</p>
+                </mat-card>
+            </mat-grid-tile>
+        </mat-grid-list>        
     </div>
 </mat-card>
 
